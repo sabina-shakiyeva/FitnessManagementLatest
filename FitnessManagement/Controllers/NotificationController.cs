@@ -18,7 +18,7 @@ namespace FitnessManagement.Controllers
             _notificationService = notificationService;
             _userDal = userDal;
         }
-
+        //bu hissede user oz notification larini gorecek notification hissesinde
         [HttpGet("my")]
         public async Task<IActionResult> GetMyNotifications()
         {

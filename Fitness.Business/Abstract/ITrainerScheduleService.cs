@@ -22,6 +22,8 @@ namespace Fitness.Business.Abstract
         Task<List<GroupGetDto>> GetGroupsByTrainerIdentityIdAsync(string trainerIdentityId);
         Task<List<UserGetDto>> GetUsersInTrainerGroupAsync(string trainerIdentityId, int groupId);
 
+        Task<List<TrainerScheduleDetailedDto>> GetUserSchedulesByIdentityIdAsync(string identityUserId);
+
 
 
     }

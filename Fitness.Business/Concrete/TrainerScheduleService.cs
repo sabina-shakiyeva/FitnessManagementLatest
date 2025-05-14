@@ -19,13 +19,66 @@ namespace Fitness.Business.Concrete
         private readonly ITrainerScheduleDal _trainerScheduleDal;
         private readonly IMapper _mapper;
         private readonly IGroupUserDal _groupUserDal;
+        private readonly IUserDal _userDal;
 
-        public TrainerScheduleService(ITrainerScheduleDal trainerScheduleDal, IMapper mapper, IGroupUserDal groupUserDal)
+        public TrainerScheduleService(ITrainerScheduleDal trainerScheduleDal, IMapper mapper, IGroupUserDal groupUserDal, IUserDal userDal)
         {
             _trainerScheduleDal = trainerScheduleDal;
             _mapper = mapper;
             _groupUserDal = groupUserDal;
+            _userDal = userDal;
         }
+
+
+
+        public async Task<List<TrainerScheduleDetailedDto>> GetUserSchedulesByIdentityIdAsync(string identityUserId)
+        {
+            
+            var user = await _userDal.Get(u => u.IdentityUserId == identityUserId);
+            if (user == null)
+                throw new InvalidOperationException("İstifadəçi tapılmadı.");
+
+            int userId = user.Id;
+
+           
+            var individualSchedules = await _trainerScheduleDal.GetList(
+                s => s.UserId == userId,
+                include: q => q
+                    .Include(s => s.Trainer)
+                    .Include(s => s.Group)
+                    .Include(s => s.User)
+            );
+
+            var groupIds = await _groupUserDal.GetList(g => g.UserId == userId);
+            var groupIdList = groupIds.Select(g => g.GroupId).ToList();
+
+            var groupSchedules = await _trainerScheduleDal.GetList(
+                s => s.GroupId.HasValue && groupIdList.Contains(s.GroupId.Value),
+                include: q => q
+                    .Include(s => s.Trainer)
+                    .Include(s => s.Group)
+                    .Include(s => s.User)
+            );
+
+            var allSchedules = individualSchedules.Concat(groupSchedules).ToList();
+
+            var result = allSchedules.Select(s => new TrainerScheduleDetailedDto
+            {
+                Id = s.Id,
+                TrainerName = s.Trainer?.Name,
+                GroupName = s.Group?.Name,
+                UserName = s.User?.Name,
+                DayOfWeek = s.DayOfWeek.ToString(),
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                Description = s.Description
+            }).ToList();
+
+            return result;
+        }
+
+
+
 
 
         //Admin hissede asagidakilar olacaq

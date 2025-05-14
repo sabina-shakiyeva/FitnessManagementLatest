@@ -3,6 +3,7 @@ using Fitness.Business.Hubs;
 using Fitness.DataAccess.Abstract;
 using Fitness.DataAccess.Concrete.EfEntityFramework;
 using Fitness.Entities.Concrete;
+using Fitness.Entities.Models.Notification;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -60,11 +61,21 @@ namespace Fitness.Business.Concrete
          
         }
 
-
-        public async Task<List<Notification>> GetUserNotificationsAsync(int userId)
+        public async Task<List<NotificationDto>> GetUserNotificationsAsync(int userId)
         {
-            return await _notificationDal.GetList(n => n.UserId == userId);
+            var notifications = await _notificationDal.GetList(n => n.UserId == userId);
+
+            return notifications.Select(n => new NotificationDto
+            {
+                Id = n.Id,
+                UserId = n.UserId,
+                Message = n.Message,
+                CreatedAt = n.CreatedAt,
+                IsRead = n.IsRead
+            }).ToList();
         }
+
+      
 
         public async Task MarkAsReadAsync(int notificationId)
         {

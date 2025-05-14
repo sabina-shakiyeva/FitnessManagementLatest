@@ -9,7 +9,7 @@ namespace FitnessManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class TrainerScheduleController : ControllerBase
     {
         private readonly ITrainerScheduleService _trainerScheduleService;
@@ -18,8 +18,16 @@ namespace FitnessManagement.Controllers
         {
             _trainerScheduleService = trainerScheduleService;
         }
+        //burada user oz cedvelini gore bilecek dashboardinda
+        [Authorize(Roles = "User")]
+        [HttpGet("my-user-schedules")]
+        public async Task<IActionResult> GetMyUserSchedules()
+        {
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var schedules = await _trainerScheduleService.GetUserSchedulesByIdentityIdAsync(identityUserId);
+            return Ok(schedules);
+        }
         //admin-de asagidakilar olacaq
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TrainerScheduleCreateDto dto)
         {

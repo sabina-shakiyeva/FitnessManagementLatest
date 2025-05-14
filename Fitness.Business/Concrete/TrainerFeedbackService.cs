@@ -59,6 +59,11 @@ namespace Fitness.Business.Concrete
             };
 
             await _feedbackDal.Add(feedback);
+            if (dto.IsPositive)
+            {
+                user.Point = user.Point + 5; 
+                await _userDal.Update(user);
+            }
 
             var message = $"Trainer sizə yeni feedback verdi: {dto.Comment}";
             await _notificationService.CreateNotificationAsync(dto.UserId, message);
