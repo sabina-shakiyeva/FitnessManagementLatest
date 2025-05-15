@@ -68,15 +68,28 @@ namespace Fitness.Business.Concrete
             await _equipmentDal.Update(equipment);
         }
 
-        public async Task<List<EquipmentGetDto>> GetAllEquipment()
-        {
 
+
+        public async Task<List<EquipmentGetDto>> GetAllEquipment(string searchTerm = null)
+        {
             var equipments = await _equipmentDal.GetList();
+
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+                equipments = equipments
+                    .Where(e =>
+                        (!string.IsNullOrEmpty(e.Name) && e.Name.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(e.Description) && e.Description.ToLower().Contains(normalizedSearch))
+                       )
+                    .ToList();
+            }
 
             var equipmentDtos = equipments.Select(equipment => new EquipmentGetDto
             {
                 Id = equipment.Id,
-                Name = equipment.Name,      
+                Name = equipment.Name,
                 Description = equipment.Description,
                 IsAvailable = equipment.IsAvailable,
                 Price = equipment.Price,
@@ -85,9 +98,33 @@ namespace Fitness.Business.Concrete
             }).ToList();
 
             return equipmentDtos;
-         
-
         }
+
+
+
+
+
+
+        //public async Task<List<EquipmentGetDto>> GetAllEquipment()
+        //{
+
+        //    var equipments = await _equipmentDal.GetList();
+
+        //    var equipmentDtos = equipments.Select(equipment => new EquipmentGetDto
+        //    {
+        //        Id = equipment.Id,
+        //        Name = equipment.Name,      
+        //        Description = equipment.Description,
+        //        IsAvailable = equipment.IsAvailable,
+        //        Price = equipment.Price,
+        //        Unit = equipment.Unit,
+        //        ImageUrl = equipment.ImageUrl != null ? _fileService.GetFileUrl(equipment.ImageUrl) : null
+        //    }).ToList();
+
+        //    return equipmentDtos;
+
+
+        //}
 
         public async Task<EquipmentGetDto> GetEquipmentById(int id)
         {

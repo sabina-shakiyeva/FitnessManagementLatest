@@ -18,13 +18,13 @@ namespace FitnessManagement.Controllers
             _equipmentService = equipmentService;
         }
         [HttpGet("equipments")]
-        public async Task<IActionResult> GetAllEquipment()
+        public async Task<IActionResult> GetAllEquipment([FromQuery] string? search)
         {
-            var equipmentList = await _equipmentService.GetAllEquipment();
+            var equipmentList = await _equipmentService.GetAllEquipment(search);
             return Ok(equipmentList);
         }
         [HttpPost("add-equipment")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEquipment([FromForm] EquipmentDto equipmentDto)
         {
            
@@ -40,7 +40,7 @@ namespace FitnessManagement.Controllers
         }
 
         [HttpPut("update-equipment/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateEquipment(int id, [FromForm] EquipmentDto equipmentDto)
         {
             await _equipmentService.UpdateEquipment(id, equipmentDto);
@@ -48,7 +48,7 @@ namespace FitnessManagement.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEquipment(int id)
         {
             await _equipmentService.DeleteEquipment(id);

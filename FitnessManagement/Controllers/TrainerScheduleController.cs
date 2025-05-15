@@ -72,6 +72,7 @@ namespace FitnessManagement.Controllers
             var list = await _trainerScheduleService.GetByGroupIdAsync(groupId);
             return Ok(list);
         }
+        //admin burada cedveli sile bilir 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -80,7 +81,7 @@ namespace FitnessManagement.Controllers
                 return NotFound();
             return NoContent(); // 204
         }
-
+        //update admin
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] TrainerScheduleUpdateDto dto)
         {

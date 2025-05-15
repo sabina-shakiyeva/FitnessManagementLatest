@@ -14,7 +14,8 @@ namespace Fitness.Business.Abstract
     public interface IUserService
     {
         Task AddUser(UserDto userDto);
-        Task<List<UserGetDto>> GetAllUsers();
+        //Task<List<UserGetDto>> GetAllUsers();
+        Task<List<UserGetDto>> GetAllUsers(string searchTerm = null);
         Task<UserGetDto> GetUserById(int id);
         Task DeleteUser(int id);
         Task UpdateUser(int userId,UserUpdateDto userUpdateDto);

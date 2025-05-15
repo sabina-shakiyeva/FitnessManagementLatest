@@ -60,7 +60,7 @@ namespace Fitness.Business.Concrete
                     .Include(s => s.User)
             );
 
-            var allSchedules = individualSchedules.Concat(groupSchedules).ToList();
+             var allSchedules = individualSchedules.Concat(groupSchedules).ToList();
 
             var result = allSchedules.Select(s => new TrainerScheduleDetailedDto
             {

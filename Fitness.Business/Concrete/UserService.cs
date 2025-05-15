@@ -516,32 +516,62 @@ namespace Fitness.Business.Concrete
             await _userManager.UpdateAsync(identityUser);
             await _userDal.Update(user);
         }
-
-
-      
-        public async Task<List<UserGetDto>> GetAllUsers()
+        public async Task<List<UserGetDto>> GetAllUsers(string searchTerm = null)
         {
+            var users = await _userDal.GetList();
 
-            var users = await _userDal.GetList(); 
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+                users = users
+                    .Where(u =>
+                        (!string.IsNullOrEmpty(u.Name) && u.Name.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(u.Email) && u.Email.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(u.Phone) && u.Phone.ToLower().Contains(normalizedSearch)))
+                    .ToList();
+            }
 
             var userDtos = users.Select(user => new UserGetDto
             {
-                Id= user.Id,
+                Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 Phone = user.Phone,
                 CreatedDate = user.CreatedDate,
                 DateOfBirth = user.DateOfBirth,
-                PackageId= user.PackageId,
-                TrainerId=user.TrainerId,
+                PackageId = user.PackageId,
+                TrainerId = user.TrainerId,
                 ImageUrl = user.ImageUrl != null ? _fileService.GetFileUrl(user.ImageUrl) : null
             }).ToList();
 
             return userDtos;
-
-
         }
-       
+
+
+
+        //public async Task<List<UserGetDto>> GetAllUsers()
+        //{
+
+        //    var users = await _userDal.GetList(); 
+
+        //    var userDtos = users.Select(user => new UserGetDto
+        //    {
+        //        Id= user.Id,
+        //        Name = user.Name,
+        //        Email = user.Email,
+        //        Phone = user.Phone,
+        //        CreatedDate = user.CreatedDate,
+        //        DateOfBirth = user.DateOfBirth,
+        //        PackageId= user.PackageId,
+        //        TrainerId=user.TrainerId,
+        //        ImageUrl = user.ImageUrl != null ? _fileService.GetFileUrl(user.ImageUrl) : null
+        //    }).ToList();
+
+        //    return userDtos;
+
+
+        //}
+
         public async Task<UserGetDto> GetUserById(int id)
         {
             var user = await _userDal.Get(u => u.Id == id);

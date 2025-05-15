@@ -129,12 +129,14 @@ namespace FitnessManagement.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+     
         [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers([FromQuery] string? search)
         {
-            var users = await _userService.GetAllUsers();
+            var users = await _userService.GetAllUsers(search);
             return Ok(users);
         }
+
         [HttpGet("trainers")]
         public async Task<IActionResult> GetAllTrainers()
         {
