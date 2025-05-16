@@ -11,7 +11,7 @@ namespace Fitness.Business.Abstract
     public interface IPackageService
     {
         Task AddPackage(PackageDto packageDto);
-        Task<List<PackageGetDto>> GetAllPackages();
+        Task<List<PackageGetDto>> GetAllPackages(string? search = null);
         Task<PackageGetDto> GetPackageById(int id);
         Task UpdatePackage(int id, PackageDto packageDto);
         Task DeletePackage(int id); 

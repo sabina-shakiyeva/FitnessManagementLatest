@@ -14,11 +14,11 @@ namespace Fitness.Business.Abstract
     public interface ITrainerService
     {
         Task AddTrainer(TrainerDto trainerDto);
-        Task<List<TrainerGetDto>> GetAllTrainers();
+        Task<List<TrainerGetDto>> GetAllTrainers(string searchTerm = null);
         Task<TrainerGetDto> GetTrainerById(int id);
         Task DeleteTrainer(int id);
         Task UpdateTrainer(int trainerId,TrainerUpdateDto trainerUpdateDto);
-        Task<List<ApplicationUser>> GetPendingTrainers();
+        Task<List<ApplicationUser>> GetPendingTrainers(string? search = null);
         Task ApproveTrainer(string trainerId);
         Task DeclineTrainer(string trainerId);
         ///
@@ -31,7 +31,8 @@ namespace Fitness.Business.Abstract
         //STATISTIKA UCUN SAYLAR
         Task<TrainerStatisticsDto> GetTrainerStatisticsAsync(string trainerIdentityId);
         //Attendance
-        Task<List<AttendanceGetDto>> GetTrainerAttendanceListAsync(string trainerIdentityId);
+
+        Task<List<AttendanceGetDto>> GetTrainerAttendanceListAsync(string trainerIdentityId, string? search = null);
 
         Task TakeAttendanceByTrainerAsync(string trainerIdentityId, TakeAttendanceDto dto);
         //trainer profile

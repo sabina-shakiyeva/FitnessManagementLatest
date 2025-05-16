@@ -19,7 +19,7 @@ namespace Fitness.Business.Abstract
         Task<List<DelayedUserDto>> GetDelayedBlockedUsersAsync();
         Task<List<SimplePaymentDto>> GetUserPaymentsAsync(string identityUserId);
         Task<string> TopUpBalanceAsync(string identityUserId, BalanceDto balanceDto);
-        Task<List<AdminPaymentDto>> GetAllPaymentsForAdminAsync();
+        Task<List<AdminPaymentDto>> GetAllPaymentsForAdminAsync(string? search);
 
     }
 }

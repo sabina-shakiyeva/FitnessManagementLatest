@@ -98,9 +98,9 @@ namespace FitnessManagement.Controllers
         }
         //asagida yazdigim iki endpointde user-in cedvelinde package ve traineri gormesi ucun yazilib
         [HttpGet("details")]
-        public async Task<IActionResult> GetAllUserPackageTrainer()
+        public async Task<IActionResult> GetAllUserPackageTrainer([FromQuery] string? search)
         {
-            var result = await _userService.GetAllUserPackageTrainer();
+            var result = await _userService.GetAllUserPackageTrainer(search);
             return Ok(result);
         }
         [HttpGet("{id}/details")]

@@ -290,15 +290,12 @@ namespace Fitness.Business.Concrete
             }
         }
 
-
-
-
-
-
-        public async Task<List<ApplicationUser>> GetPendingUsers()
+        public async Task<List<ApplicationUser>> GetPendingUsers(string search = null)
         {
             var allUsers = await _userManager.Users
-                .Where(u => !u.IsApproved)
+                .Where(u => !u.IsApproved && (search == null ||
+                                              u.FullName.Contains(search) ||
+                                              u.Email.Contains(search)))
                 .ToListAsync();
 
             var pendingUsers = new List<ApplicationUser>();
@@ -314,6 +311,7 @@ namespace Fitness.Business.Concrete
 
             return pendingUsers;
         }
+
 
         public async Task DeclineUser(string userId)
         {
@@ -611,14 +609,25 @@ namespace Fitness.Business.Concrete
             return topUsers;
         }
         //detayli sekilde gormek ucun asagidakilari yazdim hansiki user artiq hansi pakete uzv oldugunu qiymetini trainer name-i fln admin gore biler ve silib update ede biler
-        public async Task<List<UserPackageTrainerDto>> GetAllUserPackageTrainer()
+        public async Task<List<UserPackageTrainerDto>> GetAllUserPackageTrainer(string searchTerm = null)
         {
             var users = await _userDal.GetList(
-    filter: null,  
-    include: q => q
-        .Include(u => u.Package)
-        .Include(u => u.Trainer)
-);
+                filter: null,
+                include: q => q
+                    .Include(u => u.Package)
+                    .Include(u => u.Trainer)
+            );
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+                users = users.Where(user =>
+                    (!string.IsNullOrEmpty(user.Name) && user.Name.ToLower().Contains(normalizedSearch)) ||
+                    (!string.IsNullOrEmpty(user.Phone) && user.Phone.ToLower().Contains(normalizedSearch)) ||
+                    (!string.IsNullOrEmpty(user.Package?.PackageName) && user.Package.PackageName.ToLower().Contains(normalizedSearch)) ||
+                    (!string.IsNullOrEmpty(user.Trainer?.Name) && user.Trainer.Name.ToLower().Contains(normalizedSearch))
+                ).ToList();
+            }
 
             return users.Select(user => new UserPackageTrainerDto
             {
@@ -631,6 +640,8 @@ namespace Fitness.Business.Concrete
                 TrainerName = user.Trainer?.Name
             }).ToList();
         }
+
+
         //PAYMENT
         public async Task<List<UserPackageTrainerDto>> GetPayments()
         {

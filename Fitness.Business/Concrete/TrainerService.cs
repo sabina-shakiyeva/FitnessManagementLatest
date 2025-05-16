@@ -186,15 +186,17 @@ namespace Fitness.Business.Concrete
             };
         }
         //Trainer-in oz user attendance lerini gorur
-        public async Task<List<AttendanceGetDto>> GetTrainerAttendanceListAsync(string trainerIdentityId)
+        public async Task<List<AttendanceGetDto>> GetTrainerAttendanceListAsync(string trainerIdentityId, string? search = null)
         {
             var trainer = await _trainerDal.Get(t => t.IdentityTrainerId == trainerIdentityId);
-
             if (trainer == null)
                 throw new Exception("Trainer not found");
 
             var users = await _userDal.GetList(
-                filter: u => u.IsActive && u.TrainerId == trainer.Id,
+                filter: u => u.IsActive && u.TrainerId == trainer.Id &&
+                             (string.IsNullOrEmpty(search) ||
+                              u.Name.ToLower().Contains(search.ToLower()) ||
+                              u.Phone.Contains(search)),
                 include: q => q.Include(u => u.Package)
             );
 
@@ -207,6 +209,7 @@ namespace Fitness.Business.Concrete
                 PackageName = user.Package?.PackageName
             }).ToList();
         }
+
         //Trainer oz userlerini attendance-lerini qeyd ede bilir burada
         public async Task TakeAttendanceByTrainerAsync(string trainerIdentityId, TakeAttendanceDto dto)
         {
@@ -311,10 +314,13 @@ namespace Fitness.Business.Concrete
             }
         }
 
-        public async Task<List<ApplicationUser>> GetPendingTrainers()
+        public async Task<List<ApplicationUser>> GetPendingTrainers(string? search = null)
         {
             var allUsers = await _userManager.Users
-                .Where(u => !u.IsApproved)
+                .Where(u => !u.IsApproved &&
+                           (string.IsNullOrEmpty(search) ||
+                            u.FullName.ToLower().Contains(search.ToLower()) ||
+                            u.Email.ToLower().Contains(search.ToLower())))
                 .ToListAsync();
 
             var pendingTrainers = new List<ApplicationUser>();
@@ -330,6 +336,7 @@ namespace Fitness.Business.Concrete
 
             return pendingTrainers;
         }
+
         public async Task DeclineTrainer(string trainerId)
         {
 
@@ -430,9 +437,22 @@ namespace Fitness.Business.Concrete
 
             await _trainerDal.Delete(trainer);
         }
-        public async Task<List<TrainerGetDto>> GetAllTrainers()
+
+
+        public async Task<List<TrainerGetDto>> GetAllTrainers(string searchTerm = null)
         {
             var trainers = await _trainerDal.GetList();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+                trainers = trainers
+                    .Where(t =>
+                        (!string.IsNullOrEmpty(t.Name) && t.Name.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(t.Email) && t.Email.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(t.MobileTelephone) && t.MobileTelephone.ToLower().Contains(normalizedSearch)))
+                    .ToList();
+            }
 
             var trainerDtos = trainers.Select(trainer => new TrainerGetDto
             {
@@ -441,13 +461,14 @@ namespace Fitness.Business.Concrete
                 Email = trainer.Email,
                 MobileTelephone = trainer.MobileTelephone,
                 CreatedDate = trainer.CreatedDate,
-                Experience=trainer.Experience,
-                Salary=trainer.Salary,
+                Experience = trainer.Experience,
+                Salary = trainer.Salary,
                 ImageUrl = trainer.ImageUrl != null ? _fileService.GetFileUrl(trainer.ImageUrl) : null
             }).ToList();
 
             return trainerDtos;
         }
+
         //TRAINER PROFILE
         public async Task<TrainerGetDto> GetTrainerById(int id)
         {

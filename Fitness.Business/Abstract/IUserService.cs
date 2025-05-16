@@ -19,14 +19,14 @@ namespace Fitness.Business.Abstract
         Task<UserGetDto> GetUserById(int id);
         Task DeleteUser(int id);
         Task UpdateUser(int userId,UserUpdateDto userUpdateDto);
-        Task<List<ApplicationUser>> GetPendingUsers();
+        Task<List<ApplicationUser>> GetPendingUsers(string search = null);
         Task ApproveUser(string userId);
         Task DeclineUser(string userId);
         Task<List<TopUserDto>> GetTop10UsersByPointsAsync();
         Task<UserPackageTrainerDto> GetUserPackageTrainer(int id);
         Task UpdateUserPackageTrainer(int id, UserPackageTrainerUpdateDto dto);
         Task<List<UserPackageTrainerDto>> GetPayments();
-        Task<List<UserPackageTrainerDto>> GetAllUserPackageTrainer();
+        Task<List<UserPackageTrainerDto>> GetAllUserPackageTrainer(string searchTerm = null);
         Task<UserProfileDto> GetUserProfile(string identityUserId);
         Task<StatisticsDto> GetStatisticsForUser();
         Task UpdateUserProfile(int userId, UserProfileUpdateDto userProfileUpdateDto);

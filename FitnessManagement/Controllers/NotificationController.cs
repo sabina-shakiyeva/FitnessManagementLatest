@@ -29,7 +29,7 @@ namespace FitnessManagement.Controllers
             var notifications = await _notificationService.GetUserNotificationsAsync(user.Id);
             return Ok(notifications);
         }
-
+        //user notificationlarini sile bilsin
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

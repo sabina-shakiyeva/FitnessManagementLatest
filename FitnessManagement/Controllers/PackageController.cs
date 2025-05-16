@@ -21,9 +21,9 @@ namespace FitnessManagement.Controllers
         }
 
         [HttpGet("packages")]
-        public async Task<IActionResult> GetAllPackages()
+        public async Task<IActionResult> GetAllPackages([FromQuery] string? search)
         {
-            var result = await _packageService.GetAllPackages();
+            var result = await _packageService.GetAllPackages(search);
             return Ok(result);
         }
 

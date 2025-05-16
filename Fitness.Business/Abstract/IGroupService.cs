@@ -16,7 +16,7 @@ namespace Fitness.Business.Abstract
         Task<Group> UpdateGroupAsync(GroupUpdateDto dto);
         Task<bool> DeleteGroupAsync(int id);
         Task<bool> AddUserToGroupAsync(AddUserToGroupDto dto);
-        Task<List<GroupGetDto>> GetAllGroupsAsync();
+        Task<List<GroupGetDto>> GetAllGroupsAsync(string? search = null);
         Task<List<UserGetDto>> GetUsersByGroupIdAsync(int groupId);
         Task<bool> RemoveUserFromGroupAsync(int groupId, int userId);
 

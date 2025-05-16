@@ -12,7 +12,7 @@ namespace FitnessManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -112,9 +112,9 @@ namespace FitnessManagement.Controllers
         //burada admin kim neyi odeyibse gore bilecek
 
         [HttpGet("admin/all")]
-        public async Task<IActionResult> GetAllPaymentsForAdmin()
+        public async Task<IActionResult> GetAllPaymentsForAdmin([FromQuery] string? search)
         {
-            var result = await _paymentService.GetAllPaymentsForAdminAsync();
+            var result = await _paymentService.GetAllPaymentsForAdminAsync(search);
             return Ok(result);
         }
     }

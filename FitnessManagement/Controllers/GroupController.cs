@@ -33,9 +33,9 @@ namespace FitnessManagement.Controllers
             return Ok(result);
         }
         [HttpGet("all-groups")]
-        public async Task<IActionResult> GetAllGroups()
+        public async Task<IActionResult> GetAllGroups([FromQuery] string? search)
         {
-            var result = await _groupService.GetAllGroupsAsync();
+            var result = await _groupService.GetAllGroupsAsync(search);
             return Ok(result);
         }
 

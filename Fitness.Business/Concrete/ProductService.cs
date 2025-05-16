@@ -52,10 +52,19 @@ namespace Fitness.Business.Concrete
 			await _productDal.Delete(product);
 		}
 		
-		public async Task<List<ProductGetDto>> GetAllAsync()
+		public async Task<List<ProductGetDto>> GetAllAsync(string searchTerm = null)
 		{
             //var products = await _productDal.GetList();
             var products = await _productDal.GetList(p => p.Stock > 0);
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalizedSearch = searchTerm.Trim().ToLower();
+                products = products
+                    .Where(p =>
+                        (!string.IsNullOrEmpty(p.Name) && p.Name.ToLower().Contains(normalizedSearch)) ||
+                        (!string.IsNullOrEmpty(p.Description) && p.Description.ToLower().Contains(normalizedSearch)))
+                    .ToList();
+            }
 
 
             var productDtos = products.Select(product => new ProductGetDto

@@ -83,11 +83,16 @@ namespace Fitness.Business.Concrete
             await _packageDal.Delete(package);
         }
 
-        public async Task<List<PackageGetDto>> GetAllPackages()
+
+        public async Task<List<PackageGetDto>> GetAllPackages(string? search = null)
         {
-            var packages = await _packageDal.GetList();
+            var packages = await _packageDal.GetList(
+                p => string.IsNullOrEmpty(search) || p.PackageName.Contains(search)
+            );
+
             return _mapper.Map<List<PackageGetDto>>(packages);
         }
+
 
         public async Task<PackageGetDto> GetPackageById(int id)
         {

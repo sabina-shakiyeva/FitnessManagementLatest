@@ -56,10 +56,14 @@ namespace Fitness.Business.Concrete
             return group;
         }
 
-        public async Task<List<GroupGetDto>> GetAllGroupsAsync()
+        public async Task<List<GroupGetDto>> GetAllGroupsAsync(string? search = null)
         {
             var groups = await _groupDal.GetList(
-                g => !g.IsDeleted,
+                g => !g.IsDeleted &&
+                    (string.IsNullOrEmpty(search) ||
+                     g.Name.Contains(search) ||
+                     g.Package.PackageName.Contains(search) ||
+                     g.Trainer.Name.Contains(search)),
                 include: query => query.Include(g => g.Package)
                                        .Include(g => g.Trainer)
             );
@@ -74,6 +78,7 @@ namespace Fitness.Business.Concrete
                 TrainerName = g.Trainer?.Name
             }).ToList();
         }
+
 
 
         public async Task<GroupGetDto> GetGroupByIdAsync(int id)

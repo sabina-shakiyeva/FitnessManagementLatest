@@ -92,10 +92,14 @@ namespace Fitness.Business.Concrete
         }
 
 
-        public async Task<List<AttendanceGetDto>> GetAttendanceList()
+        public async Task<List<AttendanceGetDto>> GetAttendanceList(string? search = null)
         {
             var users = await _userDal.GetList(
-                filter: u => u.IsActive,
+                filter: u => u.IsActive &&
+                    (string.IsNullOrEmpty(search) ||
+                     u.Name.Contains(search) ||
+                     u.Phone.Contains(search) ||
+                     (u.Package != null && u.Package.PackageName.Contains(search))),
                 include: q => q.Include(u => u.Package)
             );
 

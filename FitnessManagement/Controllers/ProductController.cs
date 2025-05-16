@@ -18,9 +18,9 @@ namespace FitnessManagement.Controllers
 		}
 		//bunu hem adminde hem userde istifade ede biler
 		[HttpGet("products")]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery] string? searchTerm = null)
 		{
-			var products = await _productService.GetAllAsync();
+			var products = await _productService.GetAllAsync(searchTerm);
 			return Ok(products);
 		}
 		[HttpPost("add-product")]

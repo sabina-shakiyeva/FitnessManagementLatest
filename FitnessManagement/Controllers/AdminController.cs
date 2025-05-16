@@ -138,11 +138,12 @@ namespace FitnessManagement.Controllers
         }
 
         [HttpGet("trainers")]
-        public async Task<IActionResult> GetAllTrainers()
+        public async Task<IActionResult> GetAllTrainers([FromQuery] string? search)
         {
-            var trainers = await _trainerService.GetAllTrainers();
+            var trainers = await _trainerService.GetAllTrainers(search);
             return Ok(trainers);
         }
+
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -164,9 +165,9 @@ namespace FitnessManagement.Controllers
             return Ok(trainer);
         }
         [HttpGet("pending-users")]
-        public async Task<IActionResult> GetPendingUsers()
+        public async Task<IActionResult> GetPendingUsers([FromQuery] string? search = null)
         {
-            var pendingUsers = await _userService.GetPendingUsers();
+            var pendingUsers = await _userService.GetPendingUsers(search);
 
             //if (!pendingUsers.Any())
             //{
@@ -184,9 +185,9 @@ namespace FitnessManagement.Controllers
         }
 
         [HttpGet("pending-trainers")]
-        public async Task<IActionResult> GetPendingTrainers()
+        public async Task<IActionResult> GetPendingTrainers([FromQuery] string? search = null)
         {
-            var pendingTrainers = await _trainerService.GetPendingTrainers();
+            var pendingTrainers = await _trainerService.GetPendingTrainers(search);
 
             //if (!pendingTrainers.Any())
             //{

@@ -271,14 +271,14 @@ namespace Fitness.Business.Concrete
                 }
             }
         }
-        public async Task<List<AdminPaymentDto>> GetAllPaymentsForAdminAsync()
-        {
-            var payments = await _paymentDal.GetList(); 
 
-            var users = await _userDal.GetList(); 
+        public async Task<List<AdminPaymentDto>> GetAllPaymentsForAdminAsync(string? search)
+        {
+            var payments = await _paymentDal.GetList();
+            var users = await _userDal.GetList();
             var userDict = users.ToDictionary(u => u.Id, u => u.Name);
 
-            return payments
+            var result = payments
                 .OrderByDescending(p => p.PaymentDate)
                 .Select(p => new AdminPaymentDto
                 {
@@ -289,7 +289,19 @@ namespace Fitness.Business.Concrete
                     PackageId = p.PackageId,
                 })
                 .ToList();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.ToLower();
+                result = result
+                    .Where(p => p.UserName.ToLower().Contains(search))
+                    .ToList();
+            }
+
+            return result;
         }
+
+
 
 
 

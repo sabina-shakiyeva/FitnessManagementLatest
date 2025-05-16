@@ -40,9 +40,9 @@ namespace FitnessManagement.Controllers
 
 
         [HttpGet("get-attendance")]
-        public async Task<ActionResult<List<AttendanceGetDto>>> GetAttendanceList()
+        public async Task<ActionResult<List<AttendanceGetDto>>> GetAttendanceList([FromQuery] string? search)
         {
-            var result = await _attendanceService.GetAttendanceList();
+            var result = await _attendanceService.GetAttendanceList(search);
             return Ok(result);
         }
     }

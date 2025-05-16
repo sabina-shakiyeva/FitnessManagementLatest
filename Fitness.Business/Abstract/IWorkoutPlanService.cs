@@ -9,7 +9,7 @@ namespace Fitness.Business.Abstract
 {
     public interface IWorkoutPlanService
     {
-        Task<List<WorkoutPlanGetDto>> GetAllPlansAsync();
+        Task<List<WorkoutPlanGetDto>> GetAllPlansAsync(string? searchTerm = null);
         Task<WorkoutPlanGetDto> GetPlanByIdAsync(int id);
         Task AddPlanAsync(WorkoutPlanDto dto);
         Task UpdatePlanAsync(int id, WorkoutPlanDto dto);

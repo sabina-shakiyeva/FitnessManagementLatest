@@ -76,6 +76,7 @@ builder.Services.AddScoped <IPackageWorkoutDal, EfPackageWorkoutDal>();
 builder.Services.AddScoped<IFeedbackDal, EfFeedbackDal>();  
 builder.Services.AddScoped<INotificationDal,EfNotificationDal>();
 builder.Services.AddScoped<IGlobalNotificationDal, EfGlobalNotificationDal>();
+builder.Services.AddScoped<IUserNotificationDal, EfUserNotificationDal>();
 builder.Services.AddScoped<IBalanceTopUp, EfBalanceTopUp>();
 builder.Services.AddScoped <IGroupService,GroupService>();
 builder.Services.AddScoped<ITrainerScheduleService,TrainerScheduleService>();

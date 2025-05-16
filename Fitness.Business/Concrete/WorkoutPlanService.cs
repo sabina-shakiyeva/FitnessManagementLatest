@@ -70,7 +70,7 @@ namespace Fitness.Business.Concrete
         //    return result;
         //}
 
-        public async Task<List<WorkoutPlanGetDto>> GetAllPlansAsync()
+        public async Task<List<WorkoutPlanGetDto>> GetAllPlansAsync(string? searchTerm = null)
         {
             var plans = await _planDal.GetList(
                 filter: null,
@@ -78,6 +78,16 @@ namespace Fitness.Business.Concrete
                                .ThenInclude(d => d.Exercises)
                                .Include(p => p.PackageWorkouts)
             );
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string normalized = searchTerm.Trim().ToLower();
+                plans = plans
+                    .Where(p =>
+                        (!string.IsNullOrEmpty(p.Title) && p.Title.ToLower().Contains(normalized)) ||
+                        (!string.IsNullOrEmpty(p.Description) && p.Description.ToLower().Contains(normalized)))
+                    .ToList();
+            }
             return _mapper.Map<List<WorkoutPlanGetDto>>(plans);
         }
 

@@ -11,6 +11,7 @@ namespace Fitness.Business.Abstract
     {
         Task TakeAttendanceAsync(TakeAttendanceDto dto);
         Task<List<AttendanceViewDto>> GetAttendanceByUserIdAsync(int userId);
-        Task<List<AttendanceGetDto>> GetAttendanceList();
+
+        Task<List<AttendanceGetDto>> GetAttendanceList(string? search = null);
     }
 }

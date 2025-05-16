@@ -65,14 +65,14 @@ namespace FitnessManagement.Controllers
         //attendanceleri get methodunu burada yazdim
         [HttpGet("attendance")]
         [Authorize(Roles = "Trainer")]
-        public async Task<IActionResult> GetMyUserAttendance()
+        public async Task<IActionResult> GetMyUserAttendance([FromQuery] string? search = null)
         {
             var trainerIdentityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(trainerIdentityId))
                 return Unauthorized("Trainer identity not found");
 
-            var attendanceList = await _trainerService.GetTrainerAttendanceListAsync(trainerIdentityId);
+            var attendanceList = await _trainerService.GetTrainerAttendanceListAsync(trainerIdentityId,search);
             return Ok(attendanceList);
         }
         //buda ele evvel yazdigimiz kimidi take attendance 
