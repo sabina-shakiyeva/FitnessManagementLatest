@@ -73,6 +73,7 @@ builder.Services.AddScoped<IWorkoutPlanDal,EfWorkoutPlanDal>();
 builder.Services.AddScoped<IWorkoutDayDal, EfWorkoutDayDal>();
 builder.Services.AddScoped<IWorkoutExerciseDal, EfWorkoutExerciseDal>();
 builder.Services.AddScoped <IPackageWorkoutDal, EfPackageWorkoutDal>();
+builder.Services.AddScoped<ITrainerNotificationDal, EfTrainerNotificationDal>();
 builder.Services.AddScoped<IFeedbackDal, EfFeedbackDal>();  
 builder.Services.AddScoped<INotificationDal,EfNotificationDal>();
 builder.Services.AddScoped<IGlobalNotificationDal, EfGlobalNotificationDal>();

@@ -4,6 +4,7 @@ using FitnessManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fitness.DataAccess.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516175601_init6")]
+    partial class init6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -419,35 +422,6 @@ namespace Fitness.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PurchaseRequests");
-                });
-
-            modelBuilder.Entity("Fitness.Entities.Concrete.TrainerNotification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GlobalNotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GlobalNotificationId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("TrainerNotifications");
                 });
 
             modelBuilder.Entity("Fitness.Entities.Concrete.UserBmiInfo", b =>
@@ -1317,25 +1291,6 @@ namespace Fitness.DataAccess.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Fitness.Entities.Concrete.TrainerNotification", b =>
-                {
-                    b.HasOne("Fitness.Entities.Concrete.GlobalNotification", "GlobalNotification")
-                        .WithMany()
-                        .HasForeignKey("GlobalNotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessManagement.Entities.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GlobalNotification");
-
-                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Fitness.Entities.Concrete.UserBmiInfo", b =>

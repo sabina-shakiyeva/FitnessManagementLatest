@@ -15,5 +15,7 @@ namespace Fitness.Business.Abstract
         Task<List<GlobalNotificationDto>> GetAllGlobalNotificationsAsync(string identityUserId);
         //Task MarkAsReadAsync(int notificationId);
         Task MarkAsReadAsync(int notificationId, string identityUserId);
+        Task<List<GlobalNotificationDto>> GetAllGlobalNotificationsForTrainerAsync(string identityUserId);
+        Task MarkAsReadTrainerAsync(int notificationId, string identityUserId);
     }
 }

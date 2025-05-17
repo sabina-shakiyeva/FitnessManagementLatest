@@ -51,6 +51,29 @@ namespace FitnessManagement.Controllers
             await _globalNotificationService.MarkAsReadAsync(id, identityUserId);
             return NoContent();
         }
+        [Authorize(Roles = "Trainer")]
+        [HttpGet("trainer")]
+        public async Task<IActionResult> GetAllForTrainer()
+        {
+            var identityUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (identityUserId == null)
+                return Unauthorized("Məşqçi identifikasiyası tapılmadı.");
+
+            var result = await _globalNotificationService.GetAllGlobalNotificationsForTrainerAsync(identityUserId);
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Trainer")]
+        [HttpPut("trainer/mark-as-read/{id}")]
+        public async Task<IActionResult> MarkAsReadTrainer(int id)
+        {
+            var identityUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (identityUserId == null)
+                return Unauthorized();
+
+            await _globalNotificationService.MarkAsReadTrainerAsync(id, identityUserId);
+            return NoContent();
+        }
 
 
         //[HttpPut("mark-as-read/{id}")]

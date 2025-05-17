@@ -59,6 +59,7 @@ namespace FitnessManagement.Data
         public DbSet<GlobalNotification> GlobalNotifications { get; set; }
         public DbSet<BalanceTopUp> BalanceTopUps { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
+        public DbSet<TrainerNotification> TrainerNotifications { get; set; }
 
 
 
